@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>gpTemplate</title>
+	</head>
+	<body>
+		<ul id="list"></ul>
+		<script src="../gptemplate.js"></script>
+		<script id="template-basic" class="template" type="text/x-template">
+			<li>{name} says "{comment}".</li>
+		</script>
+		<script id="template-escape" class="template" type="text/x-template">
+			<li>escaped: {text} / not-escaped: {$text}</li>
+		</script>
+		<script>
+(function() {
+	var html = window.ginpencom.template('#template-basic', {
+		comment: 'Nice boat',
+		name: 'Ginpei'
+	});
+
+	document.querySelector('#list').innerHTML += html;
+	var html = window.ginpencom.template('#template-escape', {
+		text: '<b style="color:red" title=\'bold\'>BOLD</b>'
+	});
+	document.querySelector('#list').innerHTML += html;
+})();
+		</script>
+	</body>
+</html>
