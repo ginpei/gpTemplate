@@ -13,16 +13,26 @@
 		<script id="template-escape" class="template" type="text/x-template">
 			<li>escaped: {text} / not-escaped: {$text}</li>
 		</script>
+		<script id="template-switch" class="template" type="text/x-template">
+			<li>The seconds of current time is {?even}even{:else}odd{/even}. [{time}]</li>
+		</script>
 		<script>
 (function() {
 	var html = window.ginpencom.template('#template-basic', {
 		comment: 'Nice boat',
 		name: 'Ginpei'
 	});
-
 	document.querySelector('#list').innerHTML += html;
+
 	var html = window.ginpencom.template('#template-escape', {
 		text: '<b style="color:red" title=\'bold\'>BOLD</b>'
+	});
+	document.querySelector('#list').innerHTML += html;
+
+	var now = new Date();
+	var html = window.ginpencom.template('#template-switch', {
+		even: now.getSeconds() % 2,
+		time: now.toString()
 	});
 	document.querySelector('#list').innerHTML += html;
 })();

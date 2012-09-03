@@ -27,6 +27,20 @@
 			if (first == '$') {
 				result += value;
 			}
+			else if (first == '?') {
+				// TODO: nest
+				// TODO: if/else by condition
+				var then = templateText.indexOf('{:else}', end+1);
+				var endif = templateText.indexOf('{/' + key + '}', end+1);
+				var keyLength = key.length;
+				if (!!value ^ then >= 0) {
+					result += templateText.slice(start+2+keyLength, then);
+				}
+				else {
+					result += templateText.slice(then+7, endif);
+				}
+				end = endif + keyLength + 2;
+			}
 			else {
 				result += ('' + value)
 					.replace(/&/g, '&amp;')
