@@ -28,8 +28,7 @@
 				result += value;
 			}
 			else if (first == '?') {
-				// TODO: nest
-				// TODO: if/else by condition
+				// TODO: nesting like `{?cond}{?cond}{/cond}{/cond}`
 				var then = templateText.indexOf('{:else}', end+1);
 				var endif = templateText.indexOf('{/' + key + '}', end+1);
 				var keyLength = key.length;
