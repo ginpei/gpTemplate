@@ -2,7 +2,7 @@
 	var NS = window.ginpencom = window.ginpencom || {};
 	NS.template = function(source, data) {
 		var rx = /[a-zA-Z]/;
-		var templateText = document.querySelector(source).text
+		var templateText = document.querySelector(source).text;
 		var result = '';
 		var end = 0;
 
@@ -55,25 +55,5 @@
 		result += templateText.slice(end);
 
 		return result;
-
-	
-
-	/*
-				.replace(/{([?#$:\/]?)(\w+)}/g, function(all, operation, key) {
-					var hasData = (key in data);
-					var value = '' + (hasData ? data[key] : '');
-					if (operation == '$') {
-						return value;
-					}
-					else {
-						return value
-							.replace(/&/g, '&amp;')
-							.replace(/</g, '&lt;')
-							.replace(/>/g, '&gt;')
-							.replace(/"/g, '&quot;')
-							.replace(/'/g, '&#x27;');
-					}
-				});
-				*/
-	}
+	};
 })();
