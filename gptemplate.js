@@ -1,6 +1,58 @@
 (function() {
 	var NS = window.ginpencom = window.ginpencom || {};
 	NS.template = function(source, data) {
+		var templateText = document.querySelector(source).text;
+
+		// split
+		var parts = [];
+		var lastPos = 0;
+		templateText.replace(/\{([$?:\/])?(\w+)\}/g, function(all, op, key, pos) {
+			parts.push(templateText.slice(lastPos, pos));
+			parts.push([op, key]);
+			lastPos = pos + (op ? 1 : 0) + key.length + 2;
+		});
+		parts.push(templateText.slice(lastPos));
+
+		// build
+		var result = '';
+		var condition;
+		for (var i=0, l=parts.length; i<l; i++) {
+			var item = parts[i];
+			if (typeof item === 'string') {
+				result += item;
+			}
+			else {
+				var op = item[0];
+				var key = item[1];
+				var value = (key in data ? ''+data[key] : '');
+
+				if (op == '$') {
+					result += value;
+				}
+				// TODO
+				else if (op == '?') {
+					condition = !!value;
+				}
+				else if (op == ':') {
+				}
+				else if (op == '/') {
+				}
+				else {
+					result += value
+						.replace(/&/g, '&amp;')
+						.replace(/</g, '&lt;')
+						.replace(/>/g, '&gt;')
+						.replace(/"/g, '&quot;')
+						.replace(/'/g, '&#x27;');
+				}
+			}
+		}
+
+		return result;
+	};
+
+	/*
+	var old = 0&&function () {
 		var rx = /[a-zA-Z]/;
 		var templateText = document.querySelector(source).text;
 		var result = '';
@@ -56,4 +108,5 @@
 
 		return result;
 	};
+	*/
 })();
