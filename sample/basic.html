@@ -18,17 +18,20 @@
 		</script>
 		<script>
 (function() {
+	// Basic
 	var html = window.ginpencom.template('#template-basic', {
 		comment: 'Nice boat',
 		name: 'Ginpei'
 	});
 	document.querySelector('#list').innerHTML += html;
 
+	// Escape
 	var html = window.ginpencom.template('#template-escape', {
 		text: '<b style="color:red" title=\'bold\'>BOLD</b>'
 	});
 	document.querySelector('#list').innerHTML += html;
 
+	// Conditional
 	var now = new Date();
 	var html = window.ginpencom.template('#template-switch', {
 		even: now.getSeconds() % 2,

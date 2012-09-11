@@ -15,98 +15,51 @@
 
 		// build
 		var result = '';
-		var condition;
+		var condition = true;
 		for (var i=0, l=parts.length; i<l; i++) {
 			var item = parts[i];
-			if (typeof item === 'string') {
+
+			// plain text
+			if (condition && typeof item === 'string') {
 				result += item;
 			}
+
+			// operators
 			else {
 				var op = item[0];
 				var key = item[1];
-				var value = (key in data ? ''+data[key] : '');
+				var value = (key in data ? data[key] : '');
 
-				if (op == '$') {
-					result += value;
-				}
-				// TODO
-				else if (op == '?') {
+				// conditional
+				// TODO: nest
+				if (op == '?') {
 					condition = !!value;
 				}
-				else if (op == ':') {
+				// reverse conditional
+				else if (op == ':' && key == 'else') {
+					condition = !condition;
 				}
+				// end of condition
 				else if (op == '/') {
+					condition = true;
 				}
-				else {
-					result += value
-						.replace(/&/g, '&amp;')
-						.replace(/</g, '&lt;')
-						.replace(/>/g, '&gt;')
-						.replace(/"/g, '&quot;')
-						.replace(/'/g, '&#x27;');
+				// other (value)
+				else if (condition) {
+					if (op == '$') {
+						result += value;
+					}
+					else {
+						result += (''+value)
+							.replace(/&/g, '&amp;')
+							.replace(/</g, '&lt;')
+							.replace(/>/g, '&gt;')
+							.replace(/"/g, '&quot;')
+							.replace(/'/g, '&#x27;');
+					}
 				}
 			}
 		}
 
 		return result;
 	};
-
-	/*
-	var old = 0&&function () {
-		var rx = /[a-zA-Z]/;
-		var templateText = document.querySelector(source).text;
-		var result = '';
-		var end = 0;
-
-		while (end >= 0) {
-			var start = templateText.indexOf('{', end) + 1;
-			if (start < 1) {
-				break;
-			}
-
-			result += templateText.slice(end, start-1);
-
-			end = templateText.indexOf('}', start);
-			if (end < 1) {
-				break;
-			}
-
-			var inner = templateText.slice(start, end);
-			var first = inner[0];
-			var key = rx.test(first)?inner:inner.slice(1);
-			var value = (key in data ? data[key] : '');
-
-			if (first == '$') {
-				result += value;
-			}
-			else if (first == '?') {
-				// TODO: nesting like `{?cond}{?cond}{/cond}{/cond}`
-				var then = templateText.indexOf('{:else}', end+1);
-				var endif = templateText.indexOf('{/' + key + '}', end+1);
-				var keyLength = key.length;
-				if (!!value ^ then >= 0) {
-					result += templateText.slice(start+2+keyLength, then);
-				}
-				else {
-					result += templateText.slice(then+7, endif);
-				}
-				end = endif + keyLength + 2;
-			}
-			else {
-				result += ('' + value)
-					.replace(/&/g, '&amp;')
-					.replace(/</g, '&lt;')
-					.replace(/>/g, '&gt;')
-					.replace(/"/g, '&quot;')
-					.replace(/'/g, '&#x27;');
-			}
-
-			end = end + 1;
-		}
-
-		result += templateText.slice(end);
-
-		return result;
-	};
-	*/
 })();
