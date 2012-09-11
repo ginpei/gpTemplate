@@ -13,8 +13,11 @@
 		<script id="template-escape" class="template" type="text/x-template">
 			<li>escaped: {text} / not-escaped: {$text}</li>
 		</script>
-		<script id="template-switch" class="template" type="text/x-template">
+		<script id="template-conditional" class="template" type="text/x-template">
 			<li>The seconds of current time is {?even}even{:else}odd{/even}. [{time}]</li>
+		</script>
+		<script id="template-nest-conditional" class="template" type="text/x-template">
+			<li>{?a}{?b}AB{:b}Ax{/b}{:a}{?b}xB{:b}xx{/b}{/a}</li>
 		</script>
 		<script>
 (function() {
@@ -33,9 +36,31 @@
 
 	// Conditional
 	var now = new Date();
-	var html = window.ginpencom.template('#template-switch', {
+	var html = window.ginpencom.template('#template-conditional', {
 		even: now.getSeconds() % 2,
 		time: now.toString()
+	});
+	document.querySelector('#list').innerHTML += html;
+
+	// Nest Conditional
+	var html = window.ginpencom.template('#template-nest-conditional', {
+		a: true,
+		b: true
+	});
+	document.querySelector('#list').innerHTML += html;
+	var html = window.ginpencom.template('#template-nest-conditional', {
+		a: true,
+		b: false
+	});
+	document.querySelector('#list').innerHTML += html;
+	var html = window.ginpencom.template('#template-nest-conditional', {
+		a: false,
+		b: true
+	});
+	document.querySelector('#list').innerHTML += html;
+	var html = window.ginpencom.template('#template-nest-conditional', {
+		a: false,
+		b: false
 	});
 	document.querySelector('#list').innerHTML += html;
 })();

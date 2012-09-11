@@ -15,12 +15,14 @@
 
 		// build
 		var result = '';
-		var condition = true;
+		var conditionalsStack = [];
+		var curCondition = true;
+
 		for (var i=0, l=parts.length; i<l; i++) {
 			var item = parts[i];
 
 			// plain text
-			if (condition && typeof item === 'string') {
+			if (curCondition && typeof item === 'string') {
 				result += item;
 			}
 
@@ -31,20 +33,24 @@
 				var value = (key in data ? data[key] : '');
 
 				// conditional
-				// TODO: nest
 				if (op == '?') {
-					condition = !!value;
+					conditionalsStack.push(curCondition);
+					if (curCondition) {
+						curCondition = !!value;
+					}
 				}
 				// reverse conditional
-				else if (op == ':' && key == 'else') {
-					condition = !condition;
+				else if (op == ':') {
+					if (conditionalsStack[conditionalsStack.length-1]) {
+						curCondition = !curCondition;
+					}
 				}
-				// end of condition
+				// end of conditional
 				else if (op == '/') {
-					condition = true;
+					curCondition = conditionalsStack.pop();
 				}
 				// other (value)
-				else if (condition) {
+				else if (curCondition) {
 					if (op == '$') {
 						result += value;
 					}
